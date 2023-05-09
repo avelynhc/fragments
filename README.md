@@ -5,7 +5,7 @@ Run eslint and make sure there are no errors that need to be fixed:
 Test that the server can be started manually:
 `node src/server.js`
 
-Try running curl `http://localhost:8080` in another terminal 
+Try running `curl http://localhost:8080` in another terminal 
 to see JSON health check response.
 
 Pretty-print the JSON `curl -s localhost:8080 | jq`
@@ -20,4 +20,3 @@ Try starting your server using all three methods, and use CTRL + c to stop each:
 `npm start`
 `npm run dev`
 `npm run debug`
-

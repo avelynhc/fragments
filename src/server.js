@@ -6,6 +6,7 @@ const logger = require('./logger');
 const app = require('./app');
 // get the desired port from process environment. default to 8080
 const port = parseInt(process.env.PORT || 8080, 10);
+logger.debug({port}, 'Found port successfully!');
 
 // start a server listening on this port
 const server = stoppable(
