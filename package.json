@@ -11,5 +11,8 @@
     "url": "git+https://github.com/avelynhc/fragments.git"
   },
   "author": "Hyunjeong Choi",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "2.8.8"
+  }
 }
