@@ -11,5 +11,5 @@ if (options.level === 'debug') {
   };
 }
 
-// Create and export a Pino Logger instance:
+// Create and export a Pino Logger instance
 module.exports = require('pino')(options);

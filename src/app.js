@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || 'unable to process request';
 
-  // if this is a server error, log something so we can see what's going on
+  // if this is a server error, log something, so we can see what's going on
   if(status > 499) {
     logger.error({err}, 'Error processing request');
   }

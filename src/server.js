@@ -1,6 +1,6 @@
-// we want to gracefully shutdown our server
+// we want to gracefully shut down our server
 const stoppable = require('stoppable');
-// get out logger instance
+// get our logger instance
 const logger = require('./logger');
 // get our express app instance
 const app = require('./app');
