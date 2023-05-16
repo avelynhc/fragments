@@ -2,9 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
-
-const {version, author} = require('../package.json');
-
 const logger = require('./logger');
 const pino = require('pino-http')({
   logger, // use our default logger instance, which is already configured
@@ -20,19 +17,7 @@ app.use(cors()); // use CORS middleware so we can make requests across origins
 app.use(compression()); // use gzip/deflate compression middleware
 
 // c) define our HTTP route(s);
-// define a simple health check route
-// if server is running, we'll respond with 200 OK. if not, server isn't healthy
-app.get('/', (req, res) => {
-  // clients shouldn't cache this response(always request it fresh)
-  res.setHeader('Cache-Control', 'no-cache');
-  // send 200 OK response with info about our repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: 'https://github.com/avelynhc/fragments',
-    version,
-  });
-});
+app.use('/', require('./routes'));
 
 // d) add middleware for dealing with 404s;
 app.use((req, res) => {
