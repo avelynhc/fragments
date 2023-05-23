@@ -1,15 +1,13 @@
 module.exports = {
-    "env": {
-        "commonjs": true,
-        "es2021": true,
-        "node": true
+    env: {
+        node: true,
+        commonjs: true,
+        es2021: true,
+        jest: true, // Add this line to configure ESLint for Jest
     },
-    "extends": "eslint:recommended",
-    "overrides": [
-    ],
-    "parserOptions": {
-        "ecmaVersion": "latest"
+    extends: 'eslint:recommended',
+    parserOptions: {
+        ecmaVersion: 13,
     },
-    "rules": {
-    }
-}
+    rules: {},
+};
