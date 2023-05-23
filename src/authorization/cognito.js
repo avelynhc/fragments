@@ -19,6 +19,7 @@ const jwtVerifier = CognitoJwtVerifier.create({
   clientId: process.env.AWS_COGNITO_CLIENT_ID,
   tokenUse: 'id', // We expect an Identity Token (vs. Access Token)
 });
+logger.info('Configured to use AWS Cognito for Authorization');
 
 // At startup, download and cache the public keys (JWKS) we need in order to
 // verify our Cognito JWTs, see https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-key-sets
