@@ -7,7 +7,7 @@
     "test:watch": "jest -c jest.config.js --runInBand --watch --",
     "test": "jest -c jest.config.js --runInBand --",
     "coverage": "jest -c jest.config.js --runInBand --coverage",
-    "lint": "eslint --config .eslintrc.js src/** tests/**/*.js",
+    "lint": "eslint --config .eslintrc.js \"./src/**/*.js\" \"tests/**/*.js\"",
     "start": "node src/index.js",
     "dev": "LOG_LEVEL=debug nodemon ./src/index.js --watch src",
     "debug": "LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src"
@@ -32,6 +32,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
+    "http-auth": "^4.2.0",
+    "http-auth-passport": "^1.0.7",
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
     "pino": "^8.14.1",
