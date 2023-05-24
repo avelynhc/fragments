@@ -7,7 +7,7 @@ const pino = require('pino-http')({
   logger, // use our default logger instance, which is already configured
 });
 const passport = require('passport');
-const authenticate = require('./authorization/cognito');
+const authenticate = require('./authorization');
 
 // a) create an express app instance we can use to attach middleware and HTTP routes
 const app = express();

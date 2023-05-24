@@ -1,6 +1,6 @@
 const express = require('express');
 const { version, author } = require('../../package.json');
-const { authenticate } = require('../authorization/cognito'); // authenticate middleware
+const { authenticate } = require('../authorization'); // authenticate middleware
 
 // Create a router that we can use to mount our API
 const router = express.Router();
