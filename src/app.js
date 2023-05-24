@@ -28,13 +28,7 @@ app.use('/', require('./routes'));
 
 // d) add middleware for dealing with 404s;
 app.use((req, res) => {
-  const data = {
-    error: {
-      code: 404,
-      message: 'not found',
-    }
-  };
-  const errorResponse = createErrorResponse(data);
+  const errorResponse = createErrorResponse(404, 'not found');
   res.status(404).json(errorResponse);
 });
 
@@ -49,14 +43,8 @@ app.use((err, req, res, next) => {
   if(status > 499) {
     logger.error({err}, 'Error processing request');
   }
-
-  res.status(status).json({
-    status: 'error',
-    error: {
-      message,
-      code: status,
-    },
-  });
+  const errorResponse = createErrorResponse(status, message);
+  res.status(status).json(errorResponse);
 });
 
 // export our 'app' so we can access it in server.js
