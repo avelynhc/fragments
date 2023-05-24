@@ -20,3 +20,7 @@ Try starting your server using all three methods, and use CTRL + c to stop each:
 `npm start`
 `npm run dev`
 `npm run debug`
+
+Try running your test:
+`npm test`
+`npm run test:watch`
