@@ -25,6 +25,9 @@ Try running your test:
 `npm test`
 `npm run test:watch`
 
-You can run a single test file by passing its name
+You can run a single test file by passing its name:
 `npm test fileName.js`
 `npm run test:watch fileName.js`
+
+Run coverage script which collects coverage information: which files and lines of code were run:
+`npm run coverage`
