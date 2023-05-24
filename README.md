@@ -24,3 +24,7 @@ Try starting your server using all three methods, and use CTRL + c to stop each:
 Try running your test:
 `npm test`
 `npm run test:watch`
+
+You can run a single test file by passing its name
+`npm test fileName.js`
+`npm run test:watch fileName.js`
