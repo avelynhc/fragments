@@ -17,9 +17,9 @@ router.get('/', (req, res) => {
   const data = {
     author,
     githubUrl: 'https://github.com/avelynhc/fragments',
-    version};
+    version
+  };
   const response = createSuccessResponse(data);
-  console.log(response);
   res.status(200).json(response);
 });
 
