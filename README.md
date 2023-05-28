@@ -31,3 +31,26 @@ You can run a single test file by passing its name:
 
 Run coverage script which collects coverage information: which files and lines of code were run:
 `npm run coverage`
+
+Update OS packages in ec2 instance:
+`sudo yum update`
+
+Install editor in ec2 instance:
+`sudo yun install programName -y`
+
+Switch different node version in ec2 instance:
+`nvm use --lts`
+`nvm use 16`
+
+Copy file between local computer and remote computer:
+`scp file.txt remote-computer.com:file.txt`
+
+Connect to web server using SSH
+`ssh -i ~/.ssh/ccp555-key-pair.pem ec2-user@public IPv4 DNS`
+
+AWS CLI Terminal
+- Start the instance
+`aws ec2 start-instances --instance-ids {instance-id}`
+
+- Stop the instance
+`aws ec2 stop-instances --instance-ids {instance-id}`
