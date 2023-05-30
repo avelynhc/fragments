@@ -1,24 +1,22 @@
-// Use crypto.randomUUID() to create unique IDs, see:
-// https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
-// const { randomUUID } = require('crypto');
+const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
 // Functions for working with fragment metadata/data using our DB
-// const {
-//   readFragment,
-//   writeFragment,
-//   readFragmentData,
-//   writeFragmentData,
-//   listFragments,
-//   deleteFragment,
-// } = require('./data');
+const {
+  readFragment,
+  writeFragment,
+  readFragmentData,
+  writeFragmentData,
+  listFragments,
+  deleteFragment,
+} = require('./data');
 // const buffer = require("buffer");
 
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     if(id) this.id = id;
-    else this.id = '30a84843-0cd4-4975-95ba-b96112aea189'
+    else this.id = randomUUID();
 
     if(ownerId) this.ownerId = ownerId;
     else throw 'ownerId is required';
@@ -47,8 +45,11 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    if(expand === false) return [];
-    else return Fragment;
+    try{
+      return await listFragments(ownerId, expand);
+    } catch(err) {
+      throw new Error('Error getting the list of fragment data')
+    }
   }
 
   // /**
@@ -57,46 +58,71 @@ class Fragment {
   //  * @param {string} id fragment's id
   //  * @returns Promise<Fragment>
   //  */
-  // static async byId(ownerId, id) {
-  //   // TODO
-  // }
-  //
-  // /**
-  //  * Delete the user's fragment data and metadata for the given id
-  //  * @param {string} ownerId user's hashed email
-  //  * @param {string} id fragment's id
-  //  * @returns Promise<void>
-  //  */
-  // static delete(ownerId, id) {
-  //   // TODO
-  // }
-  //
-  // /**
-  //  * Saves the current fragment to the database
-  //  * @returns Promise<void>
-  //  */
-  // save() {
-  //   // TODO
-  //   console.log(this.ownerId, this.type, this.size);
-  // }
-  //
-  // /**
-  //  * Gets the fragment's data from the database
-  //  * @returns Promise<Buffer>
-  //  */
-  // getData() {
-  //   // TODO
-  // }
-  //
-  // /**
-  //  * Set's the fragment's data in the database
-  //  * @param {Buffer} data
-  //  * @returns Promise<void>
-  //  */
-  // async setData(data) {
-  //   // TODO
-  //   // return await writeFragmentData(this.ownerId, this.id, data);
-  // }
+  static async byId(ownerId, id) {
+    // TODO
+    try {
+      const data = await readFragment(ownerId, id);
+      if(data) return new Fragment(data);
+      else return data;
+    } catch(error) {
+      throw new Error('Error reading the fragment data');
+    }
+  }
+
+  /**
+   * Delete the user's fragment data and metadata for the given id
+   * @param {string} ownerId user's hashed email
+   * @param {string} id fragment's id
+   * @returns Promise<void>
+   */
+  static delete(ownerId, id) {
+    try {
+      return deleteFragment(ownerId, id);
+    } catch(error) {
+      throw new Error('Error deleting the fragment data');
+    }
+  }
+
+  /**
+   * Saves the current fragment to the database
+   * @returns Promise<void>
+   */
+  save() {
+    try {
+      return writeFragment(this);
+    } catch(error) {
+      throw new Error('Error saving the fragment data to database');
+    }
+  }
+
+  /**
+   * Gets the fragment's data from the database
+   * @returns Promise<Buffer>
+   */
+  getData() {
+    try {
+      return readFragmentData(this.ownerId, this.id);
+    } catch(error) {
+      throw new Error('Error getting the fragment data from the database');
+    }
+  }
+
+  /**
+   * Set's the fragment's data in the database
+   * @param {Buffer} data
+   * @returns Promise<void>
+   */
+  async setData(data) {
+    if(!Buffer.isBuffer(data)) throw Error('Given data is not a buffer')
+    else {
+      await this.save();
+      try {
+        return writeFragmentData(this.ownerId, this.id, data);
+      } catch(error) {
+        throw new Error('Error setting the fragment data in the database');
+      }
+    }
+  }
 
   /**
    * Returns the mime type (e.g., without encoding) for the fragment's type:
