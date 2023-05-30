@@ -1,4 +1,4 @@
-const { writeFragment, readFragment, writeFragmentData, readFragmentData, listFragments, deleteFragment } = require('../../src/model/data/memory');
+const { writeFragment, readFragment, writeFragmentData, readFragmentData, listFragments } = require('../../src/model/data/memory');
 
 describe('fragment database', () => {
   test('readFragment() returns what we writeFragment(data) into the db', async() => {

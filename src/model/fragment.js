@@ -1,19 +1,19 @@
 // Use crypto.randomUUID() to create unique IDs, see:
 // https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
-const { randomUUID } = require('crypto');
+// const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
 // Functions for working with fragment metadata/data using our DB
-const {
-  readFragment,
-  writeFragment,
-  readFragmentData,
-  writeFragmentData,
-  listFragments,
-  deleteFragment,
-} = require('./data');
-const buffer = require("buffer");
+// const {
+//   readFragment,
+//   writeFragment,
+//   readFragmentData,
+//   writeFragmentData,
+//   listFragments,
+//   deleteFragment,
+// } = require('./data');
+// const buffer = require("buffer");
 
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -51,52 +51,52 @@ class Fragment {
     else return Fragment;
   }
 
-  /**
-   * Gets a fragment for the user by the given id.
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<Fragment>
-   */
-  static async byId(ownerId, id) {
-    // TODO
-  }
-
-  /**
-   * Delete the user's fragment data and metadata for the given id
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<void>
-   */
-  static delete(ownerId, id) {
-    // TODO
-  }
-
-  /**
-   * Saves the current fragment to the database
-   * @returns Promise<void>
-   */
-  save() {
-    // TODO
-    console.log(this.ownerId, this.type, this.size);
-  }
-
-  /**
-   * Gets the fragment's data from the database
-   * @returns Promise<Buffer>
-   */
-  getData() {
-    // TODO
-  }
-
-  /**
-   * Set's the fragment's data in the database
-   * @param {Buffer} data
-   * @returns Promise<void>
-   */
-  async setData(data) {
-    // TODO
-    // return await writeFragmentData(this.ownerId, this.id, data);
-  }
+  // /**
+  //  * Gets a fragment for the user by the given id.
+  //  * @param {string} ownerId user's hashed email
+  //  * @param {string} id fragment's id
+  //  * @returns Promise<Fragment>
+  //  */
+  // static async byId(ownerId, id) {
+  //   // TODO
+  // }
+  //
+  // /**
+  //  * Delete the user's fragment data and metadata for the given id
+  //  * @param {string} ownerId user's hashed email
+  //  * @param {string} id fragment's id
+  //  * @returns Promise<void>
+  //  */
+  // static delete(ownerId, id) {
+  //   // TODO
+  // }
+  //
+  // /**
+  //  * Saves the current fragment to the database
+  //  * @returns Promise<void>
+  //  */
+  // save() {
+  //   // TODO
+  //   console.log(this.ownerId, this.type, this.size);
+  // }
+  //
+  // /**
+  //  * Gets the fragment's data from the database
+  //  * @returns Promise<Buffer>
+  //  */
+  // getData() {
+  //   // TODO
+  // }
+  //
+  // /**
+  //  * Set's the fragment's data in the database
+  //  * @param {Buffer} data
+  //  * @returns Promise<void>
+  //  */
+  // async setData(data) {
+  //   // TODO
+  //   // return await writeFragmentData(this.ownerId, this.id, data);
+  // }
 
   /**
    * Returns the mime type (e.g., without encoding) for the fragment's type:
