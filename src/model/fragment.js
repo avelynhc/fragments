@@ -1,5 +1,4 @@
 const { randomUUID } = require('crypto');
-// Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
 // Functions for working with fragment metadata/data using our DB
@@ -11,7 +10,6 @@ const {
   listFragments,
   deleteFragment,
 } = require('./data');
-// const buffer = require("buffer");
 
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -47,25 +45,25 @@ class Fragment {
   static async byUser(ownerId, expand = false) {
     try{
       return await listFragments(ownerId, expand);
-    } catch(err) {
-      throw new Error('Error getting the list of fragment data')
+    } catch(error) {
+      throw new Error(error + 'Error getting the list of fragment data')
     }
   }
 
-  // /**
-  //  * Gets a fragment for the user by the given id.
-  //  * @param {string} ownerId user's hashed email
-  //  * @param {string} id fragment's id
-  //  * @returns Promise<Fragment>
-  //  */
+  /**
+   * Gets a fragment for the user by the given id.
+   * @param {string} ownerId user's hashed email
+   * @param {string} id fragment's id
+   * @returns Promise<Fragment>
+   */
   static async byId(ownerId, id) {
-    // TODO
     try {
       const data = await readFragment(ownerId, id);
       if(data) return new Fragment(data);
-      else return data;
+      // else return data;
+      else throw new Error('Fragment is empty');
     } catch(error) {
-      throw new Error('Error reading the fragment data');
+      throw new Error(error + 'Error reading the fragment data');
     }
   }
 
@@ -79,7 +77,7 @@ class Fragment {
     try {
       return deleteFragment(ownerId, id);
     } catch(error) {
-      throw new Error('Error deleting the fragment data');
+      throw new Error(error + 'Error deleting the fragment data');
     }
   }
 
@@ -88,10 +86,11 @@ class Fragment {
    * @returns Promise<void>
    */
   save() {
+    this.updated = new Date();
     try {
       return writeFragment(this);
     } catch(error) {
-      throw new Error('Error saving the fragment data to database');
+      throw new Error(error + 'Error saving the fragment data to the database');
     }
   }
 
@@ -103,7 +102,7 @@ class Fragment {
     try {
       return readFragmentData(this.ownerId, this.id);
     } catch(error) {
-      throw new Error('Error getting the fragment data from the database');
+      throw new Error(error + 'Error getting the fragment data from the database');
     }
   }
 
@@ -113,13 +112,15 @@ class Fragment {
    * @returns Promise<void>
    */
   async setData(data) {
-    if(!Buffer.isBuffer(data)) throw Error('Given data is not a buffer')
+    if(!Buffer.isBuffer(data)) throw Error('Given data is not a Buffer')
     else {
+      this.updated = new Date();
+      this.size = Buffer.byteLength(data);
       await this.save();
       try {
         return writeFragmentData(this.ownerId, this.id, data);
       } catch(error) {
-        throw new Error('Error setting the fragment data in the database');
+        throw new Error(error + 'Error setting the fragment data in the database');
       }
     }
   }
