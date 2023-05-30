@@ -1,7 +1,7 @@
 const { Fragment } = require('../../src/model/fragment');
 
-// const wait = async (ms = 10) => new Promise((resolve) =>
-//   setTimeout(resolve, ms));
+const wait = async (ms = 1000) => new Promise((resolve) =>
+  setTimeout(resolve, ms));
 
 const validTypes = [
   `text/plain`,
@@ -184,73 +184,70 @@ describe('Fragment class', () => {
       expect(await fragment2.getData()).toEqual(data);
     });
 
-    // test('save() updates the updated date/time of a fragment', async () => {
-    //   const ownerId = '7777';
-    //   const fragment = new Fragment({
-    //                               ownerId, type: 'text/plain', size: 0 });
-    //   const modified1 = fragment.updated;
-    //   await wait();
-    //   await fragment.save();
-    //   const fragment2 = await Fragment.byId(ownerId, fragment.id);
-    //   expect(Date.parse(fragment2.updated)).toBeGreaterThan(Date.parse(modified1));
-    // });
+    test('save() updates the updated date/time of a fragment', async () => {
+      const ownerId = '7777';
+      const fragment = new Fragment({
+                                  ownerId, type: 'text/plain', size: 0 });
+      const modified1 = fragment.updated;
+      await wait();
+      await fragment.save();
+      const fragment2 = await Fragment.byId(ownerId, fragment.id);
+      expect(Date.parse(fragment2.updated)).toBeGreaterThan(Date.parse(modified1));
+    });
 
-  //   test('setData() updates the updated date/time of a fragment', async () => {
-  //     const data = Buffer.from('hello');
-  //     const ownerId = '7777';
-  //     const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
-  //     await fragment.save();
-  //     const modified1 = fragment.updated;
-  //     await wait();
-  //     await fragment.setData(data);
-  //     await wait();
-  //     const fragment2 = await Fragment.byId(ownerId, fragment.id);
-  //     expect(Date.parse(fragment2.updated)).toBeGreaterThan(Date.parse(modified1));
-  //   });
-  //
-  //   test("a fragment is added to the list of a user's fragments", async () => {
-  //     const data = Buffer.from('hello');
-  //     const ownerId = '5555';
-  //     const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
-  //     await fragment.save();
-  //     await fragment.setData(data);
-  //
-  //     expect(await Fragment.byUser(ownerId)).toEqual([fragment.id]);
-  //   });
-  //
-  //   test('full fragments are returned when requested for a user', async () => {
-  //     const data = Buffer.from('hello');
-  //     const ownerId = '6666';
-  //     const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
-  //     await fragment.save();
-  //     await fragment.setData(data);
-  //
-  //     expect(await Fragment.byUser(ownerId, true)).toEqual([fragment]);
-  //   });
-  //
-  //   test('setData() throws if not give a Buffer', () => {
-  //     const fragment = new Fragment({ ownerId: '123', type: 'text/plain', size: 0 });
-  //     expect(() => fragment.setData()).rejects.toThrow();
-  //   });
-  //
-  //   test('setData() updates the fragment size', async () => {
-  //     const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 0 });
-  //     await fragment.save();
-  //     await fragment.setData(Buffer.from('a'));
-  //     expect(fragment.size).toBe(1);
-  //
-  //     await fragment.setData(Buffer.from('aa'));
-  //     const { size } = await Fragment.byId('1234', fragment.id);
-  //     expect(size).toBe(2);
-  //   });
-  //
-  //   test('a fragment can be deleted', async () => {
-  //     const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 0 });
-  //     await fragment.save();
-  //     await fragment.setData(Buffer.from('a'));
-  //
-  //     await Fragment.delete('1234', fragment.id);
-  //     expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
-  //   });
+    test('setData() updates the updated date/time of a fragment', async () => {
+      const data = Buffer.from('hello');
+      const ownerId = '7777';
+      const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
+      await fragment.save();
+      const modified1 = fragment.updated;
+      await wait();
+      await fragment.setData(data);
+      await wait();
+      const fragment2 = await Fragment.byId(ownerId, fragment.id);
+      expect(Date.parse(fragment2.updated)).toBeGreaterThan(Date.parse(modified1));
+    });
+
+    test("a fragment is added to the list of a user's fragments", async () => {
+      const data = Buffer.from('hello');
+      const ownerId = '5555';
+      const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
+      await fragment.save();
+      await fragment.setData(data);
+      expect(await Fragment.byUser(ownerId)).toEqual([fragment.id]);
+    });
+
+    test('full fragments are returned when requested for a user', async () => {
+      const data = Buffer.from('hello');
+      const ownerId = '6666';
+      const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
+      await fragment.save();
+      await fragment.setData(data);
+      expect(await Fragment.byUser(ownerId, true)).toEqual([fragment]);
+    });
+
+    test('setData() throws if not give a Buffer', () => {
+      const fragment = new Fragment({ ownerId: '123', type: 'text/plain', size: 0 });
+      expect(() => fragment.setData()).rejects.toThrow();
+    });
+
+    test('setData() updates the fragment size', async () => {
+      const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 0 });
+      await fragment.save();
+      await fragment.setData(Buffer.from('a'));
+      expect(fragment.size).toBe(1);
+
+      await fragment.setData(Buffer.from('aa'));
+      const { size } = await Fragment.byId('1234', fragment.id);
+      expect(size).toBe(2);
+    });
+
+    test('a fragment can be deleted', async () => {
+      const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 0 });
+      await fragment.save();
+      await fragment.setData(Buffer.from('a'));
+      await Fragment.delete('1234', fragment.id);
+      expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
+    });
   });
 });
