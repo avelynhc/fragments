@@ -3,7 +3,7 @@ const logger = require('../../logger');
 const { createSuccessResponse, createErrorResponse } = require("../../response");
 
 module.exports = async (req, res) => {
-  logger.debug({ req }, '/POST request');
+  logger.debug({ req }, 'POST /fragments request');
 
   // if(!process.env.API_URL) {
   //   logger.warn('missing expected env var: API_URL');
@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
       fragments: fragment,
     }));
   } catch(error) {
-    logger.error({ error }, 'POST request error');
+    logger.error({ error }, 'POST /fragments request error');
     res.status(500).json(createErrorResponse(500, error));
   }
 }
