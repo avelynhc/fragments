@@ -41,7 +41,7 @@ describe('GET /v1/fragments/:id', () => {
       .get(`/v1/fragments/${id}`)
       .auth('avelynhc@gmail.com', 'Mustard123!');
     expect(getRes.statusCode).toBe(200);
-    expect(getRes._body.id).toEqual(id);
+    expect(getRes._body.fragments.id).toEqual(id);
     expect(getRes.body.status).toBe('ok');
   });
 
