@@ -12,7 +12,7 @@ describe('GET /v1/fragments/:id', () => {
     const id = JSON.parse(res.text).fragments.id;
     const getResponse = await request(app)
       .get(`/v1/fragments/${id}`); // missing .auth
-    expect(getResponse.statusCode).toBe(401);
+    expect(getResponse.statusCode).toBe(401); // unauthorized response status code
   });
 
   test('incorrect credentials are denied', async () => {
@@ -43,5 +43,12 @@ describe('GET /v1/fragments/:id', () => {
     expect(getRes.statusCode).toBe(200);
     expect(getRes._body.id).toEqual(id);
     expect(getRes.body.status).toBe('ok');
+  });
+
+  test('authenticated users with invalid fragment will throw', async () => {
+    const getRes = await request(app)
+      .get('/v1/fragments/invalidId')
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(getRes.statusCode).toBe(500);
   });
 });
