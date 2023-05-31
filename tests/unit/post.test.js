@@ -23,7 +23,7 @@ describe('POST /v1/fragments', () => {
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
       .set('Content-Type', 'text/plain')
-      .send('This is a fragment');
+      .send('This is a fragment from POST request');
     expect(res.statusCode).toBe(201);
   });
 
@@ -41,7 +41,7 @@ describe('POST /v1/fragments', () => {
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
       .set('Content-Type', 'text/plain')
-      .send('This is a fragment');
+      .send('This is a fragment from POST request');
     expect(res.statusCode).toBe(201);
 
     const data = JSON.parse(res.text).fragments;
@@ -65,18 +65,17 @@ describe('POST /v1/fragments', () => {
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
       .set('Content-Type', 'text/plain')
-      .send('This is a fragment');
+      .send('This is a fragment from POST request');
     const data = JSON.parse(res.text).fragments;
     expect(res.headers.location).toEqual(`http://${res.req._headers.host}/v1/fragments/${data.id}`);
-  })
+  });
 
   // trying to create a fragment with an unsupported type errors as expected
   test('create a fragment with an unsupported type throws an error',  async() => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
-      .set('Content-Type', 'image/webp')
-      .send('This is a fragment');
+      .send('This is a fragment from POST request');
     expect(res.status).toBe(415);
-  })
+  });
 });
