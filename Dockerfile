@@ -31,6 +31,9 @@ RUN npm install
 # Copy server's source code (src) to image (/app/src/)
 COPY ./src ./src
 
+# Copy our HTPASSWD file
+COPY ./tests/.htpasswd ./tests/.htpasswd
+
 # Start the container by running our server
 CMD npm start
 
