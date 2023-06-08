@@ -36,12 +36,8 @@ class Fragment {
       this.size = size;
     } else this.size = 0;
   }
-  /**
-   * Get all fragments (id or full) for the given user
-   * @param {string} ownerId user's hashed email
-   * @param {boolean} expand whether to expand ids to full fragments
-   * @returns Promise<Array<Fragment>>
-   */
+
+  // Get all fragments (id or full) for the given user
   static async byUser(ownerId, expand = false) {
     try{
       return await listFragments(ownerId, expand);
@@ -50,12 +46,7 @@ class Fragment {
     }
   }
 
-  /**
-   * Gets a fragment for the user by the given id.
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<Fragment>
-   */
+  // Gets a fragment for the user by the given id.
   static async byId(ownerId, id) {
     try {
       const data = await readFragment(ownerId, id);
@@ -81,10 +72,7 @@ class Fragment {
     }
   }
 
-  /**
-   * Saves the current fragment to the database
-   * @returns Promise<void>
-   */
+  // Saves the current fragment to the database
   save() {
     this.updated = new Date();
     try {
@@ -94,10 +82,7 @@ class Fragment {
     }
   }
 
-  /**
-   * Gets the fragment's data from the database
-   * @returns Promise<Buffer>
-   */
+  // Gets the fragment's data from the database
   getData() {
     try {
       return readFragmentData(this.ownerId, this.id);
@@ -106,11 +91,7 @@ class Fragment {
     }
   }
 
-  /**
-   * Set's the fragment's data in the database
-   * @param {Buffer} data
-   * @returns Promise<void>
-   */
+  // Set the fragment's data in the database
   async setData(data) {
     if(!Buffer.isBuffer(data)) throw Error('Given data is not a Buffer')
     else {
