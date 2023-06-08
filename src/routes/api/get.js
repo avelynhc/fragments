@@ -4,7 +4,8 @@ const { Fragment } = require('../../model/fragment');
 
 // Get a list of fragments for the current user
 module.exports = async (req, res) => {
-  logger.debug(`Query string - ${req.query}`);
+  const queryString = req.query;
+  logger.debug({ queryString }, 'Query String in GET /fragments/?expand=1');
   // GET /fragments?expand=1
   const expandValue = (req.query.expand && parseInt(req.query.expand) === 1);
   logger.info({ expandValue }, 'Got query string name expand')
