@@ -6,10 +6,11 @@ const { Fragment } = require('../../model/fragment');
 module.exports = async (req, res) => {
   logger.debug(`Query string - ${req.query}`);
   // GET /fragments?expand=1
-  const expandValue = req.query.expand && req.query.expand === 1;
+  const expandValue = (req.query.expand && parseInt(req.query.expand) === 1);
+  logger.info({ expandValue }, 'Got query string name expand')
   try {
     const fragmentsMetadata = await Fragment.byUser(req.user, expandValue);
-    logger.info({ fragmentsMetadata }, 'Successfully GET a list of fragments metadata');
+    logger.info({ fragmentsMetadata }, 'Successful GET /fragments/?expand=1');
     res.status(200).json(createSuccessResponse( {
       fragments: fragmentsMetadata
     }));
