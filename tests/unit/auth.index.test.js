@@ -13,7 +13,7 @@ describe('When env vars are invalid', () => {
       HTPASSWD_FILE: '',
     };
     expect(() => {
-      require('../../src/authorization'); // call src/auth/index.js file
+      require('../../src/auth'); // call src/auth/index.js file
     }).toThrow(new Error('missing env vars: no authorization configuration found'));
   });
 });

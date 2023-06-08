@@ -1,6 +1,6 @@
 const express = require('express');
 const { version, author } = require('../../package.json');
-const { authenticate } = require('../authorization'); // authenticate middleware
+const { authenticate } = require('../auth'); // authenticate middleware
 const { createSuccessResponse } = require('../../src/response');
 
 // Create a router that we can use to mount our API
