@@ -54,3 +54,7 @@ AWS CLI Terminal
 
 - Stop the instance
 `aws ec2 stop-instances --instance-ids {instance-id}`
+
+fragment metadata vs fragment data
+- fragment or fragment metadata refer to the metadata, which is JSON
+- fragment data refers to the fragment's raw, binary data, which is a Buffer

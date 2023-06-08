@@ -30,4 +30,7 @@ router.post('/fragments', rawBody(), require('./post'));
 // route which will return an existing fragment
 router.get('/fragments/:id', require('./get-by-id'));
 
+// route which will return fragment metadata with given id
+router.get('/fragments/:id/info', require('./get-by-id-info'));
+
 module.exports = router;
