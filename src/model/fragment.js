@@ -1,6 +1,12 @@
 const { randomUUID } = require('crypto');
 const contentType = require('content-type');
 
+class EmptyFragmentError extends Error {
+  constructor() {
+    super("Fragment is empty");
+  }
+}
+
 // Functions for working with fragment metadata/data using our DB
 const {
   readFragment,
@@ -10,6 +16,21 @@ const {
   listFragments,
   deleteFragment,
 } = require('./data');
+
+const validTypes = [
+  `text/plain`,
+  /*
+   Currently, only text/plain is supported. Others will be added later.
+
+  `text/markdown`,
+  `text/html`,
+  `application/json`,
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/gif`,
+  */
+];
 
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -48,22 +69,12 @@ class Fragment {
 
   // Gets a fragment for the user by the given id.
   static async byId(ownerId, id) {
-    try {
-      const data = await readFragment(ownerId, id);
-      if(data) return new Fragment(data);
-      // else return data;
-      else throw new Error('Fragment is empty');
-    } catch(error) {
-      throw new Error(error + 'Error reading the fragment data');
-    }
+    const data = await readFragment(ownerId, id);
+    if(data) return new Fragment(data);
+    else throw new EmptyFragmentError();
   }
 
-  /**
-   * Delete the user's fragment data and metadata for the given id
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<void>
-   */
+  // Delete the user's fragment data and metadata for the given id
   static delete(ownerId, id) {
     try {
       return deleteFragment(ownerId, id);
@@ -82,7 +93,7 @@ class Fragment {
     }
   }
 
-  // Gets the fragment's data from the database
+  // Gets the fragment data from the database
   getData() {
     try {
       return readFragmentData(this.ownerId, this.id);
@@ -91,7 +102,7 @@ class Fragment {
     }
   }
 
-  // Set the fragment's data in the database
+  // Set the fragment  data in the database
   async setData(data) {
     if(!Buffer.isBuffer(data)) throw Error('Given data is not a Buffer')
     else {
@@ -129,19 +140,53 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    let answer = [];
-    answer.push(this.mimeType);
-    return answer;
+    switch (this.mimeType) {
+      case 'text/plain':
+        return ['text/plain'];
+      case 'text/markdown':
+        return ['text/markdown', 'text/html', 'text/plain'];
+      case 'text/html':
+        return ['text/html', 'text/plain'];
+      case 'application/json':
+        return ['application/json', 'text/plain'];
+      default:
+        return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    }
   }
-
   /**
    * Returns true if we know how to work with this content type
-   * @param {string} value a Content-Type value (e.g., 'text/plain' or 'text/plain: charset=utf-8')
+   * @param {string} value a Content-Type value
+   * (e.g., 'text/plain' or 'text/plain: charset=utf-8')
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    return value === 'text/plain' || value === 'text/plain; charset=utf-8';
+    // check if value includes each element in validTypes
+    // if at least one element passes the test -> return true
+    return validTypes.some(element => value.includes(element));
+  }
+
+  async typeConversion(extension) {
+    let convertedType;
+    if(extension==='txt') {
+      convertedType = 'text/plain';
+    } else if(extension==='md') {
+      convertedType = 'text/markdown';
+    } else if(extension==='html') {
+      convertedType = 'text/html';
+    } else if(extension==='json') {
+      convertedType = 'application/json';
+    } else if(extension==='png') {
+      convertedType = 'image/png';
+    } else if(extension==='jpeg') {
+      convertedType = 'image/jpeg';
+    } else if(extension==='webp') {
+      convertedType = 'image/webp';
+    } else if(extension==='gif') {
+      convertedType = 'image/gif';
+    }
+    return convertedType;
   }
 }
 
 module.exports.Fragment = Fragment;
+module.exports.EmptyFragmentError = EmptyFragmentError;
