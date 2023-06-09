@@ -1,5 +1,7 @@
 const { randomUUID } = require('crypto');
 const contentType = require('content-type');
+const logger = require('../logger');
+const mime = require('mime-types');
 
 class EmptyFragmentError extends Error {
   constructor() {
@@ -60,11 +62,7 @@ class Fragment {
 
   // Get all fragments (id or full) for the given user
   static async byUser(ownerId, expand = false) {
-    try{
       return await listFragments(ownerId, expand);
-    } catch(error) {
-      throw new Error(error + 'Error getting the list of fragment data')
-    }
   }
 
   // Gets a fragment for the user by the given id.
@@ -76,30 +74,18 @@ class Fragment {
 
   // Delete the user's fragment data and metadata for the given id
   static delete(ownerId, id) {
-    try {
       return deleteFragment(ownerId, id);
-    } catch(error) {
-      throw new Error(error + 'Error deleting the fragment data');
-    }
   }
 
   // Saves the current fragment to the database
   save() {
     this.updated = new Date();
-    try {
       return writeFragment(this);
-    } catch(error) {
-      throw new Error(error + 'Error saving the fragment data to the database');
-    }
   }
 
   // Gets the fragment data from the database
   getData() {
-    try {
       return readFragmentData(this.ownerId, this.id);
-    } catch(error) {
-      throw new Error(error + 'Error getting the fragment data from the database');
-    }
   }
 
   // Set the fragment  data in the database
@@ -109,11 +95,7 @@ class Fragment {
       this.updated = new Date();
       this.size = Buffer.byteLength(data);
       await this.save();
-      try {
         return writeFragmentData(this.ownerId, this.id, data);
-      } catch(error) {
-        throw new Error(error + 'Error setting the fragment data in the database');
-      }
     }
   }
 
@@ -140,18 +122,13 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    switch (this.mimeType) {
-      case 'text/plain':
-        return ['text/plain'];
-      case 'text/markdown':
-        return ['text/markdown', 'text/html', 'text/plain'];
-      case 'text/html':
-        return ['text/html', 'text/plain'];
-      case 'application/json':
-        return ['application/json', 'text/plain'];
-      default:
-        return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
-    }
+    const mimeType = this.mimeType;
+    logger.debug({ mimeType }, 'mimeType of current user');
+    if(this.mimeType==='text/plain') return ['text/plain'];
+    // else if(this.mimeType==='text/markdown') return ['text/markdown', 'text/html', 'text/plain'];
+    // else if(this.mimeType==='text/html') return ['text/html', 'text/plain'];
+    // else if(this.mimeType==='application/json') return ['application/json', 'text/plain'];
+    else return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
   }
   /**
    * Returns true if we know how to work with this content type
@@ -165,26 +142,22 @@ class Fragment {
     return validTypes.some(element => value.includes(element));
   }
 
-  async typeConversion(extension) {
-    let convertedType;
-    if(extension==='txt') {
-      convertedType = 'text/plain';
-    } else if(extension==='md') {
-      convertedType = 'text/markdown';
-    } else if(extension==='html') {
-      convertedType = 'text/html';
-    } else if(extension==='json') {
-      convertedType = 'application/json';
-    } else if(extension==='png') {
-      convertedType = 'image/png';
-    } else if(extension==='jpeg') {
-      convertedType = 'image/jpeg';
-    } else if(extension==='webp') {
-      convertedType = 'image/webp';
-    } else if(extension==='gif') {
-      convertedType = 'image/gif';
+  async typeConversion(rawData, extension) {
+    let convertedContentType = mime.lookup(extension); // convert extension to desired content type
+    logger.debug({ convertedContentType }, 'Converted content type');
+    if(!this.formats.includes(convertedContentType)) {
+      logger.warn({ extension, convertedContentType }, 'Given content type is not supported');
+      return null;
     }
-    return convertedType;
+    let convertedData = rawData;
+    if (convertedContentType === 'text/plain') {
+      convertedData = rawData.toString();
+    }
+    logger.debug({ convertedData }, 'Converted data');
+    return {
+      data: convertedData,
+      type: convertedContentType
+    }
   }
 }
 
