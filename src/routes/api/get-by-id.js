@@ -12,30 +12,34 @@ module.exports = async (req, res) => {
     logger.info({ fragment }, 'Successfully retrieve an existing fragment based on the given id');
 
     const fragmentData = await fragment.getData();
-    const stringFragmentData = fragmentData.toString();
-    logger.debug({ fragmentData, stringFragmentData }, 'fragment data and converted data to string');
+    logger.debug({ fragmentData }, 'Got fragment data');
     // check if id includes an optional extension
     const optionalExtension = req.params.id.split('.')[1];
     logger.debug({ optionalExtension }, 'Optional extension');
-    if(optionalExtension) {
-      // attempt to convert the fragment to extension type
-      const convertedContentType = await fragment.typeConversion(optionalExtension);
-      if(!Fragment.isSupportedType(convertedContentType) || !convertedContentType) {
-        throw new Error(415);
-      }
-      logger.debug({ convertedContentType }, 'Converted Content Type');
+
+    if(optionalExtension) { // attempt to convert the fragment to extension type
+      const typeConversionResult = await fragment.typeConversion(fragmentData, optionalExtension);
+      logger.debug({ typeConversionResult }, 'Converted data and converted Content Type w/optional extension');
+      const newData = typeConversionResult.data;
+      const newContentType = typeConversionResult.type;
       res.set({
-        'Content-Type': convertedContentType
+        'Content-Type': newContentType
       });
       res.status(200).json(createSuccessResponse({
-        fragments: stringFragmentData,
+        fragments: newData,
       }));
-    } else {
+    } else { // no need for type conversion
+        res.set({
+          'Content-Type': fragment.type
+        });
+        const stringData = fragmentData.toString();
+        logger.debug({ stringData }, 'string data');
         res.status(200).json(createSuccessResponse({
-          fragments: stringFragmentData,
-      }));
+          fragments: fragmentData.toString()
+        }));
     }
   } catch(error) {
+    console.log(error);
     logger.error({ error }, 'GET /fragments/:id error');
     let statusCode = 500;
     if(error instanceof EmptyFragmentError) statusCode = 404;
