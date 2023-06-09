@@ -145,9 +145,10 @@ class Fragment {
   async typeConversion(rawData, extension) {
     let convertedContentType = mime.lookup(extension); // convert extension to desired content type
     logger.debug({ convertedContentType }, 'Converted content type');
+    if(!Fragment.isSupportedType(convertedContentType)) throw new Error('415');
     if(!this.formats.includes(convertedContentType)) {
-      logger.warn({ extension, convertedContentType }, 'Given content type is not supported');
-      return null;
+      logger.warn({ extension, convertedContentType }, 'Given content type cannot be converted');
+      throw new Error('415');
     }
     let convertedData = rawData;
     if (convertedContentType === 'text/plain') {
