@@ -41,7 +41,7 @@ describe('GET /v1/fragments/:id', () => {
       .get(`/v1/fragments/${id}`)
       .auth('avelynhc@gmail.com', 'Mustard123!');
     expect(getRes.statusCode).toBe(200);
-    expect(getRes.body.status).toBe('ok');
+    expect(JSON.parse(getRes.text).status).toBe('ok');
   });
 
   test('authenticated users with invalid id will throw', async () => {
@@ -90,7 +90,7 @@ describe('GET /v1/fragments/:id with optional extension', () => {
     expect(getRes.statusCode).toBe(200);
   });
 
-  test('authenticated users can get the fragment based on given id with optional extension', async () => {
+  test('fragment with not supported optional extension will throw 415', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
