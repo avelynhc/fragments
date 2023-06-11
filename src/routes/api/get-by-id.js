@@ -39,7 +39,6 @@ module.exports = async (req, res) => {
         }));
     }
   } catch(error) {
-    console.log(error);
     logger.error({ error }, 'GET /fragments/:id error');
     let statusCode = 500;
     if(error instanceof EmptyFragmentError) statusCode = 404;
