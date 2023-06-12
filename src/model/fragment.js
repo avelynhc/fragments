@@ -1,7 +1,10 @@
 const { randomUUID } = require('crypto');
 const contentType = require('content-type');
 const logger = require('../logger');
-const mime = require('mime-types');
+const mimeTypes = require('mime-types');
+const markdownIt = require('markdown-it')({
+  html: true,
+});
 
 class EmptyFragmentError extends Error {
   constructor() {
@@ -21,17 +24,16 @@ const {
 
 const validTypes = [
   `text/plain`,
-  /*
-   Currently, only text/plain is supported. Others will be added later.
-
   `text/markdown`,
   `text/html`,
   `application/json`,
+  /*
+  Others will be added later.
   `image/png`,
   `image/jpeg`,
   `image/webp`,
   `image/gif`,
-  */
+*/
 ];
 
 class Fragment {
@@ -125,10 +127,11 @@ class Fragment {
     const mimeType = this.mimeType;
     logger.debug({ mimeType }, 'mimeType of current user');
     if(this.mimeType==='text/plain') return ['text/plain'];
-    // else if(this.mimeType==='text/markdown') return ['text/markdown', 'text/html', 'text/plain'];
-    // else if(this.mimeType==='text/html') return ['text/html', 'text/plain'];
-    // else if(this.mimeType==='application/json') return ['application/json', 'text/plain'];
-    else return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    else if(this.mimeType==='text/markdown') return ['text/markdown', 'text/html', 'text/plain'];
+    else if(this.mimeType==='text/html') return ['text/html', 'text/plain'];
+    else if(this.mimeType==='application/json') return ['application/json', 'text/plain'];
+    return [];
+    // else return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
   }
   /**
    * Returns true if we know how to work with this content type
@@ -143,7 +146,7 @@ class Fragment {
   }
 
   async typeConversion(rawData, extension) {
-    let convertedContentType = mime.lookup(extension); // convert extension to desired content type
+    let convertedContentType = mimeTypes.lookup(extension); // convert extension to desired content type
     logger.debug({ convertedContentType }, 'Converted content type');
     if(!Fragment.isSupportedType(convertedContentType)) throw new Error('415');
     if(!this.formats.includes(convertedContentType)) {
@@ -153,6 +156,8 @@ class Fragment {
     let convertedData = rawData;
     if (convertedContentType === 'text/plain') {
       convertedData = rawData.toString();
+    } else if(convertedContentType === 'text/html') {
+      convertedData = markdownIt.render(rawData.toString());
     }
     logger.debug({ convertedData }, 'Converted data');
     return {
