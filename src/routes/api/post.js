@@ -3,7 +3,8 @@ const logger = require('../../logger');
 const { createSuccessResponse, createErrorResponse } = require("../../response");
 
 module.exports = async (req, res) => {
-  logger.debug({ req }, 'POST /fragments request');
+  const reqBody = req.body;
+  logger.debug({ reqBody }, 'POST /fragments request');
 
   // if(!process.env.API_URL) {
   //   logger.warn('missing expected env var: API_URL');
@@ -11,7 +12,7 @@ module.exports = async (req, res) => {
   // }
 
   if(!Buffer.isBuffer(req.body)) {
-    logger.warn({ req }, 'Given data is not a Buffer');
+    logger.warn('Given data is not a Buffer');
     return res.status(415).json(createErrorResponse(415, 'Given data is not a Buffer'));
   }
 
@@ -26,9 +27,6 @@ module.exports = async (req, res) => {
 
     // setting the response's HTTP headers field
     res.set({
-      // location will use req.headers.host when API_URL is missing on AWS
-      // use http://localhost:8080 when running locally
-      // 'Location': `${process.env.API_URL}/v1/fragments/${fragment.id}`,
       'Location': `http://${req.headers.host}/v1/fragments/${fragment.id}`,
       'Content-Type': fragment.type
     });
