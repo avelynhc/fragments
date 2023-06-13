@@ -154,12 +154,14 @@ class Fragment {
       throw new Error('415');
     }
     let convertedData = rawData;
-    if (convertedContentType === 'text/plain') {
-      convertedData = rawData.toString();
-    } else if(convertedContentType === 'text/html') {
-      convertedData = markdownIt.render(rawData.toString());
+    if(this.mimeType!==convertedContentType) {
+      if (convertedContentType === 'text/plain') {
+        convertedData = rawData.toString();
+      } else if(convertedContentType === 'text/html') {
+        convertedData = markdownIt.render(Buffer.from(convertedData).toString());
+      }
+      logger.debug({ convertedData }, 'Converted data');
     }
-    logger.debug({ convertedData }, 'Converted data');
     return {
       data: convertedData,
       type: convertedContentType
