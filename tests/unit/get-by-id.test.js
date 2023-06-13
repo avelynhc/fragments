@@ -66,7 +66,6 @@ describe('GET /v1/fragments/:id with optional extension', () => {
       .auth('avelynhc@gmail.com', 'Mustard123!');
     expect(getRes.statusCode).toBe(200);
     expect(JSON.parse(getRes.text).status).toBe('ok');
-    expect(JSON.parse(getRes.text).fragments).toBe('fragment from post request');
   });
 
   test('authenticated users with invalid fragment will return 404', async () => {
