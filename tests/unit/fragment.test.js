@@ -5,16 +5,16 @@ const wait = async (ms = 1000) => new Promise((resolve) =>
 
 const validTypes = [
   `text/plain`,
-  /*
-   Currently, only text/plain is supported. Others will be added later.
   `text/markdown`,
   `text/html`,
   `application/json`,
+  /*
+  Others will be added later.
   `image/png`,
   `image/jpeg`,
   `image/webp`,
   `image/gif`,
-  */
+*/
 ];
 
 describe('Fragment class', () => {
@@ -165,6 +165,39 @@ describe('Fragment class', () => {
         size: 0,
       });
       expect(fragment.formats).toEqual(['text/plain']);
+    });
+  });
+
+  describe('formats', () => {
+    test('formats returns the expected result for markdown text', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'text/markdown; charset=utf-8',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['text/markdown', 'text/html', 'text/plain']);
+    });
+  });
+
+  describe('formats', () => {
+    test('formats returns the expected result for html text', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'text/html; charset=utf-8',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['text/html', 'text/plain']);
+    });
+  });
+
+  describe('formats', () => {
+    test('formats returns the expected result for application/json', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'application/json; charset=utf-8',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['application/json', 'text/plain']);
     });
   });
 
