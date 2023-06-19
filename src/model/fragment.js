@@ -64,7 +64,7 @@ class Fragment {
 
   // Get all fragments (id or full) for the given user
   static async byUser(ownerId, expand = false) {
-      return await listFragments(ownerId, expand);
+      return listFragments(ownerId, expand);
   }
 
   // Gets a fragment for the user by the given id.
