@@ -6,10 +6,10 @@ module.exports = async (req, res) => {
   const reqBody = req.body;
   logger.debug({ reqBody }, 'POST /fragments request');
 
-  // if(!process.env.API_URL) {
-  //   logger.warn('missing expected env var: API_URL');
-  //   throw new Error('missing expected env var: API_URL');
-  // }
+  if(!process.env.API_URL) {
+    logger.warn('missing expected env var: API_URL');
+    throw new Error('missing expected env var: API_URL');
+  }
 
   if(!Buffer.isBuffer(req.body)) {
     logger.warn('Given data is not a Buffer');
@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 
     // setting the response's HTTP headers field
     res.set({
-      'Location': `http://${req.headers.host}/v1/fragments/${fragment.id}`,
+      'Location': `http://${process.env.API_URL}/v1/fragments/${fragment.id}`,
       'Content-Type': fragment.type
     });
     logger.info({ fragment }, 'Successfully setting the header');
