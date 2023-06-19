@@ -1,21 +1,24 @@
 const { Fragment, EmptyFragmentError } = require('../../model/fragment');
 const logger = require('../../logger');
 const { createErrorResponse, createSuccessResponse } = require('../../response');
+const path = require('node:path');
 
 // Get an existing fragment
 module.exports = async (req, res) => {
   const userInfo = req.user;
   const idParam = req.params.id;
   logger.debug({ userInfo, idParam }, 'GET /fragments/:id');
+
   try {
-    const fragment =  await Fragment.byId(req.user, req.params.id.split('.')[0]);
+    // check if id includes an optional extension
+    const optionalExtension = path.extname(req.params.id);
+    logger.debug({ optionalExtension }, 'Optional extension');
+
+    const fragment =  await Fragment.byId(req.user, path.basename(req.params.id, optionalExtension));
     logger.info({ fragment }, 'Successfully retrieve an existing fragment based on the given id');
 
     const fragmentData = await fragment.getData();
     logger.debug({ fragmentData }, 'Got fragment data');
-    // check if id includes an optional extension
-    const optionalExtension = req.params.id.split('.')[1];
-    logger.debug({ optionalExtension }, 'Optional extension');
 
     if(optionalExtension) { // attempt to convert the fragment to extension type
       const typeConversionResult = await fragment.typeConversion(fragmentData, optionalExtension);
