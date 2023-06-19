@@ -42,22 +42,22 @@ class Fragment {
     else this.id = randomUUID();
 
     if(ownerId) this.ownerId = ownerId;
-    else throw 'ownerId is required';
+    else throw new Error('ownerId is required');
 
     if(created) this.created = created;
-    else this.created = new Date();
+    else this.created = new Date().toISOString();
 
     if(updated) this.updated = updated;
-    else this.updated = new Date();
+    else this.updated = new Date().toISOString();
 
     if(type) {
-      if(!Fragment.isSupportedType(type)) throw 'invalid types throw'
+      if(!Fragment.isSupportedType(type)) throw new Error('invalid types throw');
       this.type = type;
     } else throw 'type is required';
 
     if(size) {
-      if(typeof(size)!=='number') throw 'size must be a number';
-      if(size<0) throw 'size cannot be negative';
+      if(typeof(size)!=='number') throw new Error('size must be a number');
+      if(size<0) throw new Error('size cannot be negative');
       this.size = size;
     } else this.size = 0;
   }
