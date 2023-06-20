@@ -282,5 +282,21 @@ describe('Fragment class', () => {
       await Fragment.delete('1234', fragment.id);
       expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
     });
+
+    test('type conversion from markdown to html', async () => {
+      const data = Buffer.from('hello');
+      const fragment = new Fragment({ ownerId: '6666', type: 'text/markdown', size: 0 });
+      const result = await fragment.typeConversion(data, '.html');
+      expect(result.data).toEqual('<p>hello</p>\n');
+      expect(result.type).toEqual('text/html');
+    });
+
+    test('type conversion from html to txt', async () => {
+      const data = Buffer.from('hello');
+      const fragment = new Fragment({ ownerId: '6666', type: 'text/html', size: 0 });
+      const result = await fragment.typeConversion(data, '.txt');
+      expect(result.data).toEqual('hello');
+      expect(result.type).toEqual('text/plain');
+    });
   });
 });
