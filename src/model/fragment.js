@@ -155,9 +155,10 @@ class Fragment {
     }
     let convertedData = rawData;
     if(this.mimeType!==convertedContentType) {
-      if (convertedContentType === 'text/plain') {
-        convertedData = rawData.toString();
-      } else if(convertedContentType === 'text/html') {
+      // if (convertedContentType === 'text/plain') {
+      //   convertedData = rawData.toString();
+      // } else
+      if(convertedContentType === 'text/html') {
         convertedData = markdownIt.render(Buffer.from(convertedData).toString());
       }
       logger.debug({ convertedData }, 'Converted data');
