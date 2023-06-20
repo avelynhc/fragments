@@ -163,7 +163,7 @@ class Fragment {
       logger.debug({ convertedData }, 'Converted data');
     }
     return {
-      data: convertedData,
+      data: Buffer.from(convertedData).toString(),
       type: convertedContentType
     }
   }
