@@ -67,7 +67,7 @@ describe('POST /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .send('This is a fragment from POST request');
     const data = JSON.parse(res.text).fragments;
-    expect(res.headers.location).toEqual(`http://${res.req._headers.host}/v1/fragments/${data.id}`);
+    expect(res.headers.location).toEqual(`${process.env.API_URL}/v1/fragments/${data.id}`);
   });
 
   // trying to create a fragment with an unsupported type errors as expected

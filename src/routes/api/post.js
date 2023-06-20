@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 
     // setting the response's HTTP headers field
     res.set({
-      'Location': `http://${process.env.API_URL}/v1/fragments/${fragment.id}`
+      'Location': `${process.env.API_URL}/v1/fragments/${fragment.id}`
     });
     logger.info({ fragment }, 'Successfully setting the header');
     res.status(201).json(createSuccessResponse({
