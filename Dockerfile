@@ -20,9 +20,6 @@ ENV NPM_CONFIG_COLOR=false
 
 ENV NODE_ENV=production
 
-# Use dumb-init as an init system
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
-
 # Define and create app's working directory
 # Use /app as our working directory
 WORKDIR /app
@@ -38,9 +35,6 @@ RUN npm ci --production
 
 # Stage 1: build the app by reusing cashed dependecies downlaoded in previous stage0.
 FROM node:16.17.0-alpine3.17@sha256:a13d2d2aec7f0dae18a52ca4d38b592e45a45cc4456ffab82e5ff10d8a53d042 AS build
-
-# Copy dumb-init to image
-COPY --from=dependencies /usr/bin/dumb-init /usr/bin/dumb-init
 
 # Switch user to node before we run the app
 USER node
@@ -62,5 +56,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=15s --timeout=30s --start-period=10s --retries=3 \
     CMD curl --fail localhost:8080 || exit 1
 
-# Start the container by running our server using dumb-init
-CMD ["dumb-init", "npm", "start"]
+# Start the container by running our server
+CMD ["npm", "start"]
