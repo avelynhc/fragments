@@ -1,5 +1,5 @@
 const express = require('express');
-const { version, author } = require('../../package.json');
+const { version } = require('../../package.json');
 const { authenticate } = require('../auth'); // authenticate middleware
 const { createSuccessResponse } = require('../../src/response');
 const { hostname } = require('os');
