@@ -1,0 +1,81 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:559585086223:task-definition/fragments-task:2",
+  "containerDefinitions": [
+    {
+      "name": "fragments",
+      "image": "avelynhc/fragments:latest",
+      "cpu": 256,
+      "memoryReservation": 512,
+      "links": [],
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [],
+      "environment": [
+        {
+          "name": "API_URL",
+          "value": "http://localhost:8080"
+        },
+        {
+          "name": "PORT",
+          "value": "8080"
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fragments-task",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "family": "fragments-task",
+  "executionRoleArn": "arn:aws:iam::559585086223:role/LabRole",
+  "networkMode": "awsvpc",
+  "revision": 2,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "registeredAt": "2023-07-04T20:33:43.238Z",
+  "registeredBy": "arn:aws:sts::559585086223:assumed-role/voclabs/user2558764=Choi,_Hyunjeong",
+  "tags": []
+}
