@@ -2,6 +2,7 @@ const express = require('express');
 const { version, author } = require('../../package.json');
 const { authenticate } = require('../auth'); // authenticate middleware
 const { createSuccessResponse } = require('../../src/response');
+const { hostname } = require('os');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -14,13 +15,14 @@ router.use(`/v1`, authenticate(), require('./api'));
 router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
-  const data = {
-    author,
-    githubUrl: 'https://github.com/avelynhc/fragments',
-    version
-  };
-  const response = createSuccessResponse(data);
-  res.status(200).json(response);
+  res.status(200).json(
+    createSuccessResponse({
+      author: 'Hyunjeong Choi',
+      githubUrl: 'https://github.com/avelynhc/fragments',
+      version,
+      hostname: hostname(),
+    })
+  );
 });
 
 module.exports = router;
