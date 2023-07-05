@@ -73,8 +73,6 @@ jobs:
 
       # We need to update our fragment's Task Definition JSON
       # (i.e., fragments-definition.json) to use the newly
-      # updated Docker Image to use (i.e., the tag we just pushed to ECR).
-      # We can also update/set the environment variables if we want.
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: update-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
