@@ -94,10 +94,10 @@ jobs:
             AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
             # ...continue the rest here...
         
-        - name: Deploy Amazon ECS task definition
-          uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-          with:
-            task-definition: ${{ steps.update-task-def.outputs.task-definition }}
-            cluster: fragments-cluster
-            service: fragments-service
-            wait-for-service-stability: true
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
+          cluster: fragments-cluster
+          service: fragments-service
+          wait-for-service-stability: true
