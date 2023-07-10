@@ -1,5 +1,5 @@
 # Confirm that posting a fragment when not authenticated produces a 401 error
-POST http://localhost:80/v1/fragments
+POST http://localhost:8080/v1/fragments
 Content-Type: text/plain
 [BasicAuth]
 user1@gmail.com: invalidPassword
