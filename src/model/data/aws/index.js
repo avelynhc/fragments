@@ -27,10 +27,10 @@ async function writeFragmentData(ownerId, id, data) {
     Key: `${ownerId}/${id}`,
     Body: data,
   };
-
+  logger.info({ params }, 'Created the PUT API params from our details');
   // Create a PUT Object command to send to S3
   const command = new PutObjectCommand(params);
-
+  logger.info({ command }, 'Created a PUT Object command to send to S3');
   try {
     // Use our client to send the command
     await s3Client.send(command);
