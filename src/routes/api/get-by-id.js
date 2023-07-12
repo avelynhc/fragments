@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
     }
   } catch(error) {
     logger.error({ error }, 'GET /fragments/:id error');
-    let statusCode = 500;
+    let statusCode = 404;
     if(error instanceof EmptyFragmentError) statusCode = 404;
     if(error.message === '415') statusCode = 415;
     res.status(statusCode).json(createErrorResponse(statusCode, error));
