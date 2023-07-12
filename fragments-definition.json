@@ -1,12 +1,11 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:559585086223:task-definition/fragments-task:2",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:559585086223:task-definition/fragments-task:5",
   "containerDefinitions": [
     {
       "name": "fragments",
-      "image": "avelynhc/fragments:latest",
+      "image": "559585086223.dkr.ecr.us-east-1.amazonaws.com/fragments:v0.7.5",
       "cpu": 256,
       "memoryReservation": 512,
-      "links": [],
       "portMappings": [
         {
           "containerPort": 8080,
@@ -15,16 +14,30 @@
         }
       ],
       "essential": true,
-      "entryPoint": [],
-      "command": [],
       "environment": [
         {
+          "name": "AWS_REGION",
+          "value": "us-east-1"
+        },
+        {
           "name": "API_URL",
-          "value": "http://localhost:8080"
+          "value": "http://ec2co-ecsel-msozzzjrmnnk-455407636.us-east-1.elb.amazonaws.com:8080/"
         },
         {
           "name": "PORT",
           "value": "8080"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "LOG_LEVEL",
+          "value": "info"
+        },
+        {
+          "name": "AWS_S3_BUCKET_NAME",
+          "value": "hyunjeong.choi-fragments"
         }
       ],
       "mountPoints": [],
@@ -42,7 +55,7 @@
   "family": "fragments-task",
   "executionRoleArn": "arn:aws:iam::559585086223:role/LabRole",
   "networkMode": "awsvpc",
-  "revision": 2,
+  "revision": 5,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -53,10 +66,16 @@
       "name": "ecs.capability.execution-role-awslogs"
     },
     {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -75,7 +94,7 @@
   ],
   "cpu": "256",
   "memory": "512",
-  "registeredAt": "2023-07-04T20:33:43.238Z",
+  "registeredAt": "2023-07-10T17:50:18.999Z",
   "registeredBy": "arn:aws:sts::559585086223:assumed-role/voclabs/user2558764=Choi,_Hyunjeong",
   "tags": []
 }
