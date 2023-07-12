@@ -6,6 +6,6 @@ avelynhc@gmail.com: Mustard123!
 `This is a fragment!`
 
 # Response
-HTTP/* 415
+HTTP 415
 Content-Type: application/json; charset=utf-8
 Content-Length: 78

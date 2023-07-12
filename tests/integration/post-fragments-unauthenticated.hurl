@@ -6,4 +6,4 @@ user1@gmail.com: invalidPassword
 `This is a fragment!`
 
 # Response we expect from Step 1
-HTTP/* 401
+HTTP 401

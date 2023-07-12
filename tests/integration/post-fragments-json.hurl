@@ -6,7 +6,7 @@ avelynhc@gmail.com: Mustard123!
 `This is a fragment!`
 
 # Response we expect from Step 1
-HTTP/* 201
+HTTP 201
 [Asserts]
 # location header verified with Regex
 header "Location" matches /^http:\/\/localhost:8080\/v1\/fragments\/[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
@@ -18,7 +18,7 @@ GET {{url}}
 [BasicAuth]
 avelynhc@gmail.com: Mustard123!
 
-HTTP/* 200
+HTTP 200
 Content-Type: application/json; charset=utf-8
 Content-Length: 49
 `{"status":"ok","fragments":"This is a fragment!"}`

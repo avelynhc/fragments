@@ -6,7 +6,7 @@ avelynhc@gmail.com: Mustard123!
 `This is a fragment!`
 
 # Response we expect from Step 1
-HTTP/* 201
+HTTP 201
 Content-Type: application/json; charset=utf-8
 Content-Length: 254
 [Asserts]
@@ -31,7 +31,7 @@ GET {{url}}
 [BasicAuth]
 avelynhc@gmail.com: Mustard123!
 
-HTTP/* 200
+HTTP 200
 Content-Type: text/plain; charset=utf-8
 Content-Length: 49
 `{"status":"ok","fragments":"This is a fragment!"}`
