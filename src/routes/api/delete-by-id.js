@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     logger.info({ fragment }, 'Successfully retrieve an existing fragment based on the given id');
     if(!fragment) return res.status(404).json(createErrorResponse(404, 'Given id not found'));
     await Fragment.delete(req.user, idParam);
-    res.status(204).json(createSuccessResponse());
+    res.status(200).json(createSuccessResponse());
   } catch(error) {
     logger.error({ error }, 'DELETE /fragments request error');
     res.status(500).json(createErrorResponse(500, error));
