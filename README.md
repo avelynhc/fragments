@@ -58,3 +58,11 @@ AWS CLI Terminal
 fragment metadata vs fragment data
 - fragment or fragment metadata refer to the metadata, which is JSON
 - fragment data refers to the fragment's raw, binary data, which is a Buffer
+
+In our design, a `fragment` will be split across [AWS S3](https://aws.amazon.com/s3/) (data) and [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) (metadata).
+- S3:
+  - Our `fragments` data is between 0 and 5Mb in size, and can be any type from text to JSON to binary images.
+- DynamoDB: 
+  - Each `fragment` will be an **item** in our table. 
+  - Since an **owner** might have many fragments (i.e., **ids**), we'll use the `ownerId` as our **partition key**, and the fragment `id` as our **sort key**. 
+  - The other `fragment` values `created`, `updated`, `type`, `size` will be **attributes** on each `fragment` **item**.
