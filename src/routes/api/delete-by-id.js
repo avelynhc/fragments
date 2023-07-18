@@ -14,6 +14,6 @@ module.exports = async (req, res) => {
     res.status(200).json(createSuccessResponse());
   } catch(error) {
     logger.error({ error }, 'DELETE /fragments request error');
-    res.status(500).json(createErrorResponse(500, error));
+    res.status(404).json(createErrorResponse(404, error));
   }
 };
