@@ -27,13 +27,10 @@ const validTypes = [
   `text/markdown`,
   `text/html`,
   `application/json`,
-  /*
-  Others will be added later.
   `image/png`,
   `image/jpeg`,
   `image/webp`,
-  `image/gif`,
-*/
+  `image/gif`
 ];
 
 class Fragment {
@@ -64,7 +61,7 @@ class Fragment {
 
   // Get all fragments (id or full) for the given user
   static async byUser(ownerId, expand = false) {
-      return listFragments(ownerId, expand);
+    return listFragments(ownerId, expand);
   }
 
   // Gets a fragment for the user by the given id.
@@ -76,18 +73,18 @@ class Fragment {
 
   // Delete the user's fragment data and metadata for the given id
   static delete(ownerId, id) {
-      return deleteFragment(ownerId, id);
+    return deleteFragment(ownerId, id);
   }
 
   // Saves the current fragment to the database
   save() {
     this.updated = new Date();
-      return writeFragment(this);
+    return writeFragment(this);
   }
 
   // Gets the fragment data from the database
   getData() {
-      return readFragmentData(this.ownerId, this.id);
+    return readFragmentData(this.ownerId, this.id);
   }
 
   // Set the fragment  data in the database
@@ -97,7 +94,7 @@ class Fragment {
       this.updated = new Date();
       this.size = Buffer.byteLength(data);
       await this.save();
-        return writeFragmentData(this.ownerId, this.id, data);
+      return writeFragmentData(this.ownerId, this.id, data);
     }
   }
 
@@ -130,9 +127,11 @@ class Fragment {
     else if(this.mimeType==='text/markdown') return ['text/markdown', 'text/html', 'text/plain'];
     else if(this.mimeType==='text/html') return ['text/html', 'text/plain'];
     else if(this.mimeType==='application/json') return ['application/json', 'text/plain'];
-    return [];
-    // else return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    else if(this.mimeType==='image/png' || this.mimeType==='image/jpeg' || this.mimeType==='image/webp' || this.mimeType==='image/gif')
+      return ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    else return [];
   }
+
   /**
    * Returns true if we know how to work with this content type
    * @param {string} value a Content-Type value
@@ -146,26 +145,27 @@ class Fragment {
   }
 
   async typeConversion(rawData, extension) {
-    let convertedContentType = mimeTypes.lookup(extension); // convert extension to desired content type
-    logger.debug({ convertedContentType }, 'Converted content type');
-    if(!Fragment.isSupportedType(convertedContentType)) throw new Error('415');
-    if(!this.formats.includes(convertedContentType)) {
-      logger.warn({ extension, convertedContentType }, 'Given content type cannot be converted');
+    let wishContentType = mimeTypes.lookup(extension); // convert extension to desired content type
+    logger.debug({ wishContentType }, 'Converted content type');
+    if(!Fragment.isSupportedType(wishContentType)) throw new Error('415');
+    if(!this.formats.includes(wishContentType)) {
+      logger.warn({ extension, wishContentType }, 'Given content type cannot be converted');
       throw new Error('415');
     }
+
     let convertedData = rawData;
-    if(this.mimeType!==convertedContentType) {
+    if(this.mimeType!==wishContentType) { // if current content type !== wish content type
       // if (convertedContentType === 'text/plain') {
       //   convertedData = rawData.toString();
       // } else
-      if(convertedContentType === 'text/html') {
+      if(wishContentType === 'text/html') {
         convertedData = markdownIt.render(Buffer.from(convertedData).toString());
       }
       logger.debug({ convertedData }, 'Converted data');
     }
     return {
       data: Buffer.from(convertedData).toString(),
-      type: convertedContentType
+      type: wishContentType
     }
   }
 }
