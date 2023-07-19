@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
   const userInfo = req.user;
   const idParam = req.params.id;
   logger.debug({ userInfo, idParam }, 'PUT /fragments/:id');
-
+  console.log(userInfo, idParam);
   try {
     // check if id includes an optional extension
     const optionalExtension = path.extname(idParam);
@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
     const fragment =  await Fragment.byId(userInfo, path.basename(idParam, optionalExtension));
     logger.info({ fragment }, 'Successfully retrieve an existing fragment based on the given id');
-
+    console.log(fragment);
     if(!fragment) {
       return res.status(404).json(createErrorResponse(
         415, 'No such fragment exists with the given id'));
