@@ -40,4 +40,6 @@ router.get('/fragments/:id/info', require('./get-by-id-info'));
 
 router.delete('/fragments/:id', require('./delete-by-id'));
 
+router.put('/fragments/:id', require('./put'));
+
 module.exports = router;
