@@ -28,10 +28,10 @@ module.exports = async (req, res) => {
     const fragment =  await Fragment.byId(userInfo, path.basename(idParam, optionalExtension));
     logger.info({ fragment }, 'Successfully retrieved an existing fragment based on the given id');
 
-    if(!fragment) {
-      return res.status(404).json(createErrorResponse(
-        404, 'No such fragment exists with the given id'));
-    }
+    // if(!fragment) {
+    //   return res.status(404).json(createErrorResponse(
+    //     404, 'No such fragment exists with the given id'));
+    // }
 
     if(req.get('Content-Type')!==fragment.type) {
       return res.status(400).json(createErrorResponse(
