@@ -5,9 +5,6 @@ const path = require('node:path');
 
 // Update an existing fragment
 module.exports = async (req, res) => {
-  const reqBody = req.body;
-  logger.debug(req, 'req.body');
-
   if(!process.env.API_URL) {
     logger.warn('missing expected env var: API_URL');
     throw new Error('missing expected env var: API_URL');
