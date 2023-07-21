@@ -5,6 +5,16 @@ const mimeTypes = require('mime-types');
 const markdownIt = require('markdown-it')({
   html: true,
 });
+const { convert } = require('html-to-text');
+const { jsonToPlainText } = require('json-to-plain-text');
+const options = {
+  wordwrap: 130,
+  color: false,
+  spacing: false,
+  squareBracketsForArray: false,
+  doubleQuotesForKeys: false,
+  doubleQuotesForValues: false,
+};
 
 class EmptyFragmentError extends Error {
   constructor() {
@@ -146,25 +156,28 @@ class Fragment {
 
   async typeConversion(rawData, extension) {
     let wishContentType = mimeTypes.lookup(extension); // convert extension to desired content type
-    logger.debug({ wishContentType }, 'Converted content type');
+    logger.debug({ wishContentType }, 'Wish content type');
     if(!Fragment.isSupportedType(wishContentType)) throw new Error('415');
     if(!this.formats.includes(wishContentType)) {
       logger.warn({ extension, wishContentType }, 'Given content type cannot be converted');
       throw new Error('415');
     }
 
-    let convertedData = rawData;
-    if(this.mimeType!==wishContentType) { // if current content type !== wish content type
-      // if (convertedContentType === 'text/plain') {
-      //   convertedData = rawData.toString();
-      // } else
+    let convertedData = Buffer.from(rawData).toString();
+    if(this.mimeType !== wishContentType) { // if current content type !== wish content type
       if(wishContentType === 'text/html') {
-        convertedData = markdownIt.render(Buffer.from(convertedData).toString());
+        convertedData = markdownIt.render(convertedData);
+      } else if(wishContentType === 'text/plain' && this.mimeType === 'text/html') {
+        convertedData = convert(convertedData, options);
+      } else if(wishContentType === 'text/plain' && this.mimeType === 'application/json') {
+        convertedData = JSON.parse(convertedData); // change string -> json object
+        logger.debug({ convertedData }, 'json object');
+        convertedData = jsonToPlainText(convertedData, options);
       }
       logger.debug({ convertedData }, 'Converted data');
     }
     return {
-      data: Buffer.from(convertedData).toString(),
+      data: convertedData,
       type: wishContentType
     }
   }
