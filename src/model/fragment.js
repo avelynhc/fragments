@@ -155,6 +155,16 @@ class Fragment {
     return validTypes.some(element => value.includes(element));
   }
 
+  markdownParser(md) {
+    const toHTML = md
+      .replace(/^### (.*$)/gim, '$1')
+      .replace(/^## (.*$)/gim, '$1')
+      .replace(/^# (.*$)/gim, '$1')
+      .replace(/\*\*(.*)\*\*/gim, '$1')
+      .replace(/\*(.*)\*/gim, '$1');
+    return toHTML.trim(); // using trim method to remove whitespace
+  }
+
   async typeConversion(rawData, extension) {
     let wishContentType = mimeTypes.lookup(extension); // convert extension to desired content type
     logger.debug({ wishContentType }, 'Wish content type');
@@ -171,6 +181,9 @@ class Fragment {
     if(this.mimeType !== wishContentType) { // if current content type !== wish content type
       if(wishContentType === 'text/html' && this.mimeType === 'text/markdown') {
         convertedData = markdownIt.render(convertedData); // md -> html
+      } else if(wishContentType === 'text/plain' && this.mimeType === 'text/markdown') {
+        convertedData = this.markdownParser(convertedData); // md -> txt
+        logger.debug({ convertedData }, 'testing!');
       } else if(wishContentType === 'text/plain' && this.mimeType === 'text/html') {
         convertedData = convert(convertedData, options); // html -> plain
       } else if(wishContentType === 'text/plain' && this.mimeType === 'application/json') {
