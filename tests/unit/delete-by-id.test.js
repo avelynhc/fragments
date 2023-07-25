@@ -29,12 +29,72 @@ describe('DELETE /v1/fragments/:id', () => {
     expect(getResponse.statusCode).toBe(401);
   });
 
-  test('authenticated users can get the fragment based on given id', async () => {
+  test('authenticated users can delete the fragment based on given id', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
       .set('Content-Type', 'text/plain')
       .send('fragment from post request');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const delRes = await request(app)
+      .delete(`/v1/fragments/${id}`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(delRes.statusCode).toBe(200);
+    expect(JSON.parse(delRes.text).status).toBe('ok');
+  });
+
+  test('authenticated users can delete the fragment based on given id', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'image/png')
+      .send('testing.png');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const delRes = await request(app)
+      .delete(`/v1/fragments/${id}`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(delRes.statusCode).toBe(200);
+    expect(JSON.parse(delRes.text).status).toBe('ok');
+  });
+
+  test('authenticated users can delete the fragment based on given id', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'application/json')
+      .send({'testing': 'json fragment'});
+
+    const id = JSON.parse(res.text).fragments.id;
+    const delRes = await request(app)
+      .delete(`/v1/fragments/${id}`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(delRes.statusCode).toBe(200);
+    expect(JSON.parse(delRes.text).status).toBe('ok');
+  });
+
+  test('authenticated users can delete the fragment based on given id', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'text/markdown')
+      .send('# Heading level 1');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const delRes = await request(app)
+      .delete(`/v1/fragments/${id}`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(delRes.statusCode).toBe(200);
+    expect(JSON.parse(delRes.text).status).toBe('ok');
+  });
+
+  test('authenticated users can delete the fragment based on given id', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'text/html')
+      .send('<p>testing</p>');
 
     const id = JSON.parse(res.text).fragments.id;
     const delRes = await request(app)
