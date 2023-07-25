@@ -15,6 +15,7 @@ const options = {
   doubleQuotesForKeys: false,
   doubleQuotesForValues: false,
 };
+const sharp = require('sharp');
 
 class EmptyFragmentError extends Error {
   constructor() {
@@ -164,15 +165,32 @@ class Fragment {
     }
 
     let convertedData = Buffer.from(rawData).toString();
+    const fileName = convertedData.split('.')[0];
+    logger.debug({ convertedData }, 'raw data so far!');
+
     if(this.mimeType !== wishContentType) { // if current content type !== wish content type
-      if(wishContentType === 'text/html') {
-        convertedData = markdownIt.render(convertedData);
+      if(wishContentType === 'text/html' && this.mimeType === 'text/markdown') {
+        convertedData = markdownIt.render(convertedData); // md -> html
       } else if(wishContentType === 'text/plain' && this.mimeType === 'text/html') {
-        convertedData = convert(convertedData, options);
+        convertedData = convert(convertedData, options); // html -> plain
       } else if(wishContentType === 'text/plain' && this.mimeType === 'application/json') {
-        convertedData = JSON.parse(convertedData); // change string -> json object
+        convertedData = JSON.parse(convertedData);
         logger.debug({ convertedData }, 'json object');
-        convertedData = jsonToPlainText(convertedData, options);
+        convertedData = jsonToPlainText(convertedData, options); // json -> plain
+      } else if(wishContentType === 'image/png') {
+        convertedData = await sharp(rawData).png();
+        convertedData = fileName + '.' + convertedData.options.formatOut;
+      } else if(wishContentType === 'image/jpeg') {
+        convertedData = await sharp(rawData).jpeg();
+        convertedData = fileName + '.' + convertedData.options.formatOut;
+      } else if(wishContentType === 'image/webp') {
+        convertedData = await sharp(rawData).webp();
+        convertedData = fileName + '.' + convertedData.options.formatOut;
+      } else if(wishContentType === 'image/gif') {
+        convertedData = await sharp(rawData).gif();
+        convertedData = fileName + '.' + convertedData.options.formatOut;
+      } else {
+        convertedData = '';
       }
       logger.debug({ convertedData }, 'Converted data');
     }
