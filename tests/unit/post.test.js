@@ -59,6 +59,98 @@ describe('POST /v1/fragments', () => {
     expect(result.size).toEqual(data.size);
   });
 
+  test('post can create image fragments', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'image/png')
+      .send('testing.png');
+    expect(res.statusCode).toBe(201);
+
+    const data = JSON.parse(res.text).fragments;
+    expect(data.id).toBeDefined();
+    expect(data.ownerId).toBeDefined();
+    expect(data.created).toBeDefined();
+    expect(data.updated).toBeDefined();
+    expect(data.type).toBeDefined();
+    expect(data.size).toBeDefined();
+
+    const result = await Fragment.byId(data.ownerId, data.id);
+    expect(result.id).toEqual(data.id);
+    expect(result.ownerId).toEqual(data.ownerId);
+    expect(result.type).toEqual(data.type);
+    expect(result.size).toEqual(data.size);
+  });
+
+  test('post can create json fragments', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'application/json')
+      .send({'testing': 'json fragment'});
+    expect(res.statusCode).toBe(201);
+
+    const data = JSON.parse(res.text).fragments;
+    expect(data.id).toBeDefined();
+    expect(data.ownerId).toBeDefined();
+    expect(data.created).toBeDefined();
+    expect(data.updated).toBeDefined();
+    expect(data.type).toBeDefined();
+    expect(data.size).toBeDefined();
+
+    const result = await Fragment.byId(data.ownerId, data.id);
+    expect(result.id).toEqual(data.id);
+    expect(result.ownerId).toEqual(data.ownerId);
+    expect(result.type).toEqual(data.type);
+    expect(result.size).toEqual(data.size);
+  });
+
+  test('post can create markdown fragments', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'text/markdown')
+      .send('# Heading level 1');
+    expect(res.statusCode).toBe(201);
+
+    const data = JSON.parse(res.text).fragments;
+    expect(data.id).toBeDefined();
+    expect(data.ownerId).toBeDefined();
+    expect(data.created).toBeDefined();
+    expect(data.updated).toBeDefined();
+    expect(data.type).toBeDefined();
+    expect(data.size).toBeDefined();
+
+    const result = await Fragment.byId(data.ownerId, data.id);
+    expect(result.id).toEqual(data.id);
+    expect(result.ownerId).toEqual(data.ownerId);
+    expect(result.type).toEqual(data.type);
+    expect(result.size).toEqual(data.size);
+  });
+
+  test('post can create html fragments', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'text/html')
+      .send('<p>testing</p>');
+    expect(res.statusCode).toBe(201);
+
+    const data = JSON.parse(res.text).fragments;
+    expect(data.id).toBeDefined();
+    expect(data.ownerId).toBeDefined();
+    expect(data.created).toBeDefined();
+    expect(data.updated).toBeDefined();
+    expect(data.type).toBeDefined();
+    expect(data.size).toBeDefined();
+
+    const result = await Fragment.byId(data.ownerId, data.id);
+    expect(result.id).toEqual(data.id);
+    expect(result.ownerId).toEqual(data.ownerId);
+    expect(result.type).toEqual(data.type);
+    expect(result.size).toEqual(data.size);
+  });
+
   // responses include a Location header with a URL to GET the fragment
   test('responses include a Location header with a URL to GET the fragment', async () => {
     const res = await request(app)
