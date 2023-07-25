@@ -73,7 +73,7 @@ describe('GET /v1/fragments/:id with optional extension', () => {
       .post('/v1/fragments')
       .auth('avelynhc@gmail.com', 'Mustard123!')
       .set('Content-Type', 'text/markdown')
-      .send('fragment from post request with markdown content-type');
+      .send('# fragment from post request with markdown content-type');
 
     const id = JSON.parse(res.text).fragments.id;
     const getRes = await request(app)
@@ -82,7 +82,24 @@ describe('GET /v1/fragments/:id with optional extension', () => {
     expect(getRes.statusCode).toBe(200);
     expect(JSON.parse(getRes.text).status).toBe('ok');
     expect(JSON.parse(getRes.text).fragments)
-      .toMatch('<p>fragment from post request with markdown content-type</p>');
+      .toMatch('<h1>fragment from post request with markdown content-type</h1>');
+  });
+
+  test('authenticated users can convert the fragment from .md to .txt', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'text/markdown')
+      .send('# fragment from post request with markdown content-type');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${id}.txt`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(getRes.statusCode).toBe(200);
+    expect(JSON.parse(getRes.text).status).toBe('ok');
+    expect(JSON.parse(getRes.text).fragments)
+      .toMatch('fragment from post request with markdown content-type');
   });
 
   test('authenticated users can convert the fragment from .html to .txt', async () => {
@@ -118,6 +135,51 @@ describe('GET /v1/fragments/:id with optional extension', () => {
     expect(JSON.parse(getRes.text).fragments)
       .toMatch('' +
         'content-type : application/json');
+  });
+
+  test('authenticated users can convert the fragment from .png to .jpeg', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'image/png')
+      .send('imageConversionTesting.png');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${id}.jpeg`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(getRes.statusCode).toBe(200);
+    expect(getRes.header['content-type']).toContain('jpeg')
+  });
+
+  test('authenticated users can convert the fragment from .png to .webp', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'image/webp')
+      .send('imageConversionTesting.png');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${id}.webp`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(getRes.statusCode).toBe(200);
+    expect(getRes.header['content-type']).toContain('webp')
+  });
+
+  test('authenticated users can convert the fragment from .png to .gif', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('avelynhc@gmail.com', 'Mustard123!')
+      .set('Content-Type', 'image/webp')
+      .send('imageConversionTesting.png');
+
+    const id = JSON.parse(res.text).fragments.id;
+    const getRes = await request(app)
+      .get(`/v1/fragments/${id}.gif`)
+      .auth('avelynhc@gmail.com', 'Mustard123!');
+    expect(getRes.statusCode).toBe(200);
+    expect(getRes.header['content-type']).toContain('gif')
   });
 
   test('authenticated users with invalid fragment will return 404', async () => {
